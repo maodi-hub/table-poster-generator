@@ -1,0 +1,28 @@
+{
+  "name": "poster",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "element-plus": "^2.8.2",
+    "radash": "^12.1.0",
+    "vue": "^3.4.37",
+    "vue-draggable-plus": "^0.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.4",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.45",
+    "sass": "^1.78.0",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.1",
+    "vue-tsc": "^2.0.29"
+  }
+}
