@@ -10,10 +10,12 @@ import Header from "./components/Header.vue";
 import Table from "./components/Table.vue";
 import type { TableProps, DataType } from "./components/type";
 
-import { computed, provide, reactive, ref } from "vue";
+import { computed, provide, reactive, ref, shallowRef } from "vue";
 
 
 import { POSTER_TAG, POSTER_TAG_SET_KEY } from "./constants";
+
+const containerRef = shallowRef<InstanceType<typeof Container>>();
 
 const containerConfig = reactive({
   width: 810,
@@ -212,7 +214,7 @@ provide(POSTER_TAG_SET_KEY, (payload: string) => (tag.value = payload));
 
 <template>
   <ElConfigProvider size="default">
-    <Container :width="containerConfig.width">
+    <Container :width="containerConfig.width" ref="containerRef">
       <Header class="mb-12" :tag="tag" />
       <main class="px-6">
         <Table :columns="columns" :rows="rows" />

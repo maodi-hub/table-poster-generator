@@ -8,7 +8,7 @@
           <template v-for="(col, colIdx) in columns" :key="col">
             <div
               :class="[
-                'col flex',
+                'col',
                 {
                   'flex-1 min-w-0 overflow-hidden': colIdx >= 1,
                   'bg-white': colIdx > 0,
@@ -21,13 +21,13 @@
               <div
                 ref="cellRef"
                 :class="[
-                  'cell flex-1 min-w-0 flex justify-center items-center px-6 py-4',
+                  'cell flex justify-center items-center px-6 py-3',
                   {
                     'cell-header': colIdx === 0,
                     'has-before-mask': colIdx > 0 && rowIdx % 2 === 1,
                     'has-after-mask': colIdx > 0 && colIdx % 2 === 1,
-                    'is-current':
-                      anchorPostion.x === colIdx && anchorPostion.y === rowIdx,
+                    // 'is-current':
+                    //   anchorPostion.x === colIdx && anchorPostion.y === rowIdx,
                   },
                 ]"
                 :data-rowIdx="rowIdx"

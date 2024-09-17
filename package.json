@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "element-plus": "^2.8.2",
+    "html2canvas": "^1.4.1",
     "radash": "^12.1.0",
     "vue": "^3.4.37",
     "vue-draggable-plus": "^0.5.3"

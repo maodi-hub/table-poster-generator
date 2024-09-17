@@ -1,16 +1,12 @@
 <template>
-  <el-drawer
-    v-model="show"
-    title="设置"
-    :size="500"
-    :close-on-press-escape="false"
-    :close-on-click-modal="false"
-    :modal="false"
-    modal-class="ope-drawer-modal"
-    destroy-on-close
-    @close="handleClose"
-    class="text-black ope-drawer"
-  >
+  <el-drawer v-model="show" title="设置" :size="500" :close-on-press-escape="false" :close-on-click-modal="false"
+    :modal="false" modal-class="ope-drawer-modal" destroy-on-close @close="handleClose" class="text-black ope-drawer">
+    <template #title>
+      <div>
+        <span>设置</span><el-button :icon="Download" circle @click="getPoster" />
+      </div>
+
+    </template>
     <el-form :model="form" label-position="top" @submit.prevent>
       <el-form-item label="布局">
         <div class="flex-1">
@@ -18,22 +14,10 @@
             <el-radio :value="0">列</el-radio>
             <el-radio :value="1">行</el-radio>
           </el-radio-group>
-          <TableLayoutOpe
-            v-if="!layoutType"
-            v-model:data="columns"
-            direction="vertical"
-            @add="$emit('add', $event)"
-            @del="$emit('del', $event)"
-            @update="$emit('sortUpdate', $event)"
-          />
-          <TableLayoutOpe
-            v-else
-            v-model:data="rows"
-            direction="horizontal"
-            @add="$emit('add', $event)"
-            @del="$emit('del', $event)"
-            @update="$emit('sortUpdate', $event)"
-          />
+          <TableLayoutOpe v-if="!layoutType" v-model:data="columns" direction="vertical" @add="$emit('add', $event)"
+            @del="$emit('del', $event)" @update="$emit('sortUpdate', $event)" />
+          <TableLayoutOpe v-else v-model:data="rows" direction="horizontal" @add="$emit('add', $event)"
+            @del="$emit('del', $event)" @update="$emit('sortUpdate', $event)" />
         </div>
       </el-form-item>
       <el-form-item label="海报标签">
@@ -41,12 +25,7 @@
       </el-form-item>
       <el-form-item label="海报尺寸">
         <el-form-item>
-          <el-input-number
-            :model-value="containerWidth"
-            :min="0"
-            :max="width"
-            @change="onWidthChange"
-          />
+          <el-input-number :model-value="containerWidth" :min="0" :max="width" @change="onWidthChange" />
         </el-form-item>
         <el-form-item class="flex-1 min-w-0 ml-2">
           <el-slider v-model="percent" />
@@ -58,17 +37,17 @@
       <template v-for="(layItem, idx) in layout" :key="idx">
         <template v-if="!!layItem.children.length">
           <h2 class="mb-4">{{ layItem.label }}</h2>
-          <el-form-item
-            v-for="(item, idx) in layItem.children"
-            :key="idx"
-            :label="item.label"
-          >
+          <el-form-item v-for="(item, idx) in layItem.children" :key="idx" :label="item.label">
             <component :is="components[item.type]" v-model="form[item.field]" />
           </el-form-item>
           <el-divider />
         </template>
       </template>
     </el-form>
+    <Teleport to="body" v-if="poster">
+      <img :src="poster" class="absolute top-0 left-0" width="810">
+    </Teleport>
+
   </el-drawer>
 </template>
 
@@ -83,7 +62,9 @@ import {
   ElInput,
   ElRadio,
   ElRadioGroup,
+  ElButton
 } from "element-plus";
+import { Download } from "@element-plus/icons-vue";
 import type { SortableEvent } from "vue-draggable-plus";
 import TableLayoutOpe, {
   type Props as LayoutProps,
@@ -104,6 +85,7 @@ import { useOpeLayout } from "./hooks/useOpeLayout";
 import { useOpeForm } from "./hooks/useOpeForm";
 
 import { COLUMNS_KEY, ROWS_KEY } from "../constants";
+import toImage from "@/utils/toImage";
 
 interface Emit {
   (e: "cancel"): void;
@@ -116,12 +98,13 @@ interface Emit {
 }
 
 const layoutType = ref(0);
-const [columns] = inject(COLUMNS_KEY, [computed(() => []), () => {}, () => {}]);
-const [rows] = inject(ROWS_KEY, [computed(() => []), () => {}, () => {}]);
+const [columns] = inject(COLUMNS_KEY, [computed(() => []), () => { }, () => { }]);
+const [rows] = inject(ROWS_KEY, [computed(() => []), () => { }, () => { }]);
 
 const $emit = defineEmits<Emit>();
 
 const show = ref(false);
+const poster = ref("");
 
 const {
   width,
@@ -142,6 +125,12 @@ const components: Record<string, Component> = {
   "group-text": defineAsyncComponent(() => import("./GroupSelector.vue")),
   single: defineAsyncComponent(() => import("./Single.vue")),
 };
+
+const getPoster = () => {
+  toImage(document.querySelector("#container") as HTMLElement).then((ctx) => {
+    poster.value  = ctx.toDataURL('image/png', 1).replace("image/png", "image/octet-stream");
+  })
+}
 
 const handleShow = (
   row: TableProps<any>["rows"][number],
@@ -177,6 +166,7 @@ defineExpose({
   bottom: 0 !important;
   left: unset !important;
 }
+
 .ope-drawer {
   .el-drawer__footer {
     text-align: left;

@@ -3,6 +3,7 @@ import type { LayoutConfig } from "../settingConfig";
 import { TableProps, ValueType } from "../type";
 import { debounce, isNumber } from "radash";
 import { DEFAULT_COLORS } from "@/constants";
+import { color } from "html2canvas/dist/types/css/types/color";
 
 const needPxSuffix = ["fontSize"];
 
@@ -71,6 +72,8 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
   };
 
   const groupMerge = (type: "text" | "group"): MergeGroup => {
+    const isGroup = type ==="group";
+    const colorDefault = isGroup ? "#fff" : "#000"
     return {
       hydrate(data, _row, column, _rowIdx, _colIdx) {
         form.content = (data[column.dataIndex] as ValueType[]).map<ValueType>(
@@ -79,7 +82,7 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
               value: item.value,
               style: {
                 ...item.style,
-                color: (item.style && item.style.color) ?? type === "group" ? "#fff" : "#000",
+                color: (item.style && item.style.color) ?? colorDefault,
                 fontSize:
                   (item.style &&
                     item.style.fontSize &&
@@ -102,7 +105,7 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
             form.content as ValueType[]
           ).map((item) => ({
             value: item.value,
-            style: Object.keys({ ...item.style }).reduce((pre, cur) => {
+            style: Object.keys({ ...item.style, color: (item.style && item.style.color) ?? colorDefault }).reduce((pre, cur) => {
               if (needPxSuffix.includes(cur))
                 return {
                   ...pre,
