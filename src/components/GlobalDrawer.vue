@@ -1,7 +1,6 @@
 <template>
   <el-drawer
     v-model="show"
-    title="设置"
     :size="500"
     :close-on-press-escape="false"
     :close-on-click-modal="false"
@@ -14,8 +13,8 @@
   >
     <template #header>
       <div>
-        <span>设置</span
-        ><el-button :icon="Download" circle @click="getPoster" />
+        <span>海报配置</span>
+        <el-button :icon="Download" circle @click="getPoster" />
       </div>
     </template>
     <el-form :model="form" label-position="top" @submit.prevent>
@@ -59,33 +58,6 @@
           <el-slider v-model="percent" />
         </el-form-item>
       </el-form-item>
-
-      <el-divider />
-
-      <template v-for="(layItem, idx) in layout" :key="idx">
-        <template v-if="!!layItem.children.length">
-          <h2 class="mb-4">{{ layItem.label }}</h2>
-          <el-form-item
-            v-for="(item, idx) in layItem.children"
-            :key="idx"
-            :label="item.label"
-          >
-            <component
-              v-if="['style', 'content'].includes(layItem.type)"
-              :is="components[item.type]"
-              v-model="form[item.field]"
-              :options="item.options"
-            />
-            <component
-              v-else
-              :is="components[item.type]"
-              v-model="form.props[item.field]"
-              :options="item.options"
-            />
-          </el-form-item>
-          <el-divider />
-        </template>
-      </template>
     </el-form>
     <Teleport to="body" v-if="poster">
       <img :src="poster" class="absolute top-0 left-0" width="810" />
@@ -100,7 +72,6 @@ import {
   ElForm,
   ElFormItem,
   ElInputNumber,
-  ElDivider,
   ElInput,
   ElRadio,
   ElRadioGroup,
@@ -112,19 +83,9 @@ import TableLayoutOpe, {
   type Props as LayoutProps,
 } from "./TableLayoutOpe.vue";
 export type { LayoutProps };
-import type { TableProps } from "./type";
 
-import {
-  ref,
-  type Component,
-  defineAsyncComponent,
-  nextTick,
-  inject,
-  computed,
-} from "vue";
+import { ref, inject, computed, reactive } from "vue";
 import { useContainer } from "./hooks/useContainer";
-import { useOpeLayout } from "./hooks/useOpeLayout";
-import { useOpeForm } from "./hooks/useOpeForm";
 
 import { COLUMNS_KEY, ROWS_KEY } from "../constants";
 import toImage from "@/utils/toImage";
@@ -156,17 +117,7 @@ const {
   posterTag,
   handlePosterTagSet,
 } = useContainer();
-const { layout, handleSetLayout } = useOpeLayout();
-const { form, handleSetDataStorage, hydrateForm } = useOpeForm(layout);
-
-const components: Record<string, Component> = {
-  color: defineAsyncComponent(() => import("./Color.vue")),
-  text: ElInput,
-  size: ElInput,
-  group: defineAsyncComponent(() => import("./GroupSelector.vue")),
-  "group-text": defineAsyncComponent(() => import("./GroupSelector.vue")),
-  single: defineAsyncComponent(() => import("./Radio.vue")),
-};
+const form = reactive({});
 
 const getPoster = () => {
   toImage(document.querySelector("#container") as HTMLElement).then((ctx) => {
@@ -174,19 +125,8 @@ const getPoster = () => {
   });
 };
 
-const handleShow = (
-  row: TableProps<any>["rows"][number],
-  column: TableProps<any>["columns"][number],
-  rowIdx: number,
-  colIdx: number
-) => {
-  handleSetLayout(colIdx === 0 ? "text" : row.type || "text");
-  handleSetDataStorage(row, column, rowIdx, colIdx);
-  hydrateForm(row, column, rowIdx, colIdx);
-
-  nextTick(() => {
-    show.value = true;
-  });
+const handleShow = () => {
+  show.value = true;
 };
 
 const handleClose = () => {

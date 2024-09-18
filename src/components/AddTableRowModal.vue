@@ -13,20 +13,24 @@
         :rules="[{ required: true, message: '必填项' }]"
       >
         <el-radio-group v-model="form.type">
-          <el-radio value="text">text</el-radio>
           <el-radio value="group">group</el-radio>
+          <el-radio value="group-text">group-text</el-radio>
+          <el-radio value="text">text</el-radio>
           <el-radio value="img">img</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item
-        v-if="form.type === 'group'"
-        label="方向"
+        v-if="['group', 'group-text'].includes(form.type)"
+        label="模式"
         prop="type"
         :rules="[{ required: true, message: '必填项' }]"
       >
-        <el-radio-group v-model="form.direction">
+        <el-radio-group v-model="form.props.direction">
           <el-radio value="horizontal">水平</el-radio>
           <el-radio value="vertical">垂直</el-radio>
+          <el-radio v-if="form.type === 'group-text'" value="normal">
+            自适应
+          </el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item
@@ -64,7 +68,7 @@ interface Emit {
     payload: {
       type: string;
       value: string;
-      direction?: "direction" | "horizontal";
+      props: any;
     }
   ): void;
 }
@@ -75,11 +79,13 @@ const show = ref(false);
 const form = reactive({
   type: "text",
   value: "",
-  direction: "",
+  props: {
+    direction: "horizontal",
+  },
 });
 
 const formRef = ref<FormInstance>();
-const onSubmit = (payload: { type: string; value: string }) => {
+const onSubmit = (payload: { type: string; value: string; props: any }) => {
   formRef.value?.validate().then((validate) => {
     if (!validate) return;
     $emit("add", { ...toRaw(payload) });

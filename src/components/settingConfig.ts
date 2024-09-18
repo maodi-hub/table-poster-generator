@@ -1,16 +1,16 @@
-import {FLEX_ALIGN} from "../constants";
+import { FLEX_ALIGN } from "../constants";
 
 export interface LayoutConfig {
   label: string;
-  type: "style" | "content";
+  type: "style" | "content" | "row";
   children: {
     label: string;
     field: string;
     type: "color" | "size" | "text" | "group" | "single";
-    unit?: string; 
+    unit?: string;
     defaultValue?: any;
     cellHeaderDefaultValue?: string;
-    options?: {label: string, value: string}[]
+    options?: { label: string; value: any }[];
   }[];
 }
 
@@ -48,7 +48,7 @@ export const textConfig: LayoutConfig[] = [
         defaultValue: "center",
         cellHeaderDefaultValue: "flex-start",
         options: FLEX_ALIGN,
-      }
+      },
     ],
   },
   {
@@ -59,9 +59,80 @@ export const textConfig: LayoutConfig[] = [
 ];
 
 export const groupConfig: LayoutConfig[] = [
+  { 
+    label:"单元格配置",
+    type: "row",
+    children: [
+      {
+        label: "模式",
+        field: "direction",
+        type: "single",
+        defaultValue: "horizontal",
+        options: [
+          { label: "水平", value: "horizontal" },
+          { label: "垂直", value: "vertical" },
+        ],
+      },
+    ]
+   },
   {
-    label: "内容",
+    label: "",
     type: "content",
-    children: [{ label: "", field: "content", type: "group", defaultValue: [] }],
+    children: [
+      { label: "内容", field: "content", type: "group", defaultValue: [] },
+    ],
+  },
+];
+
+export const groupTextConfig: LayoutConfig[] = [
+  {
+    label: "单元格配置",
+    type: "row",
+    children: [
+      {
+        label: "卡片",
+        field: "card",
+        type: "single",
+        defaultValue: false,
+        options: [
+          { label: "是", value: true },
+          { label: "否", value: false },
+        ],
+      },
+      {
+        label: "卡片背景",
+        field: "cardBgColor",
+        type: "color",
+        defaultValue: "#fff",
+      },
+      {
+        label: "模式",
+        field: "direction",
+        type: "single",
+        defaultValue: "horizontal",
+        options: [
+          { label: "水平", value: "horizontal" },
+          { label: "垂直", value: "vertical" },
+          { label: "自适应", value: "normal" },
+        ],
+      },
+      {
+        label: "分隔符",
+        field: "separate",
+        type: "single",
+        defaultValue: false,
+        options: [
+          { label: "是", value: true },
+          { label: "否", value: false },
+        ],
+      },
+    ],
+  },
+  {
+    label: "",
+    type: "content",
+    children: [
+      { label: "内容", field: "content", type: "group", defaultValue: [] },
+    ],
   },
 ];

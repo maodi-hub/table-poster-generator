@@ -9,14 +9,7 @@
     <template #suffix>
       <el-popover placement="bottom-end" :width="300" trigger="click">
         <template #reference>
-          <div
-            class="cursor-pointer"
-            :style="{
-              backgroundColor: value.style?.backgroundColor,
-              width: '20px',
-              height: '20px',
-            }"
-          ></div>
+          <el-button text link :icon="Setting"/>
         </template>
         <el-form :model="value.style" labelPosition="top">
           <el-form-item label="背景色">
@@ -33,6 +26,9 @@
           <el-form-item label="字体大小">
             <el-input v-model="value.style!.fontSize" />
           </el-form-item>
+          <el-form-item label="字体加粗">
+            <el-input v-model="value.style!.fontWeight" />
+          </el-form-item>
         </el-form>
       </el-popover>
     </template>
@@ -46,7 +42,9 @@ import {
   ElForm,
   ElFormItem,
   ElDivider,
+  ElButton
 } from "element-plus";
+import { Setting } from "@element-plus/icons-vue";
 import ColorPicker from "./Color.vue";
 
 

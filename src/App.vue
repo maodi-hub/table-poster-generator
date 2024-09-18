@@ -8,10 +8,10 @@ import { ElConfigProvider } from "element-plus";
 import Container from "./components/Container.vue";
 import Header from "./components/Header.vue";
 import Table from "./components/Table.vue";
+import Footer from "./components/Footer.vue";
 import type { TableProps, DataType } from "./components/type";
 
 import { computed, provide, reactive, ref, shallowRef } from "vue";
-
 
 import { POSTER_TAG, POSTER_TAG_SET_KEY } from "./constants";
 
@@ -183,7 +183,7 @@ const rows = reactive<TableProps<DataType>["rows"]>([
   {
     label: "机身尺寸 (毫米)",
     type: "group-text",
-    props: { direction: "normal"},
+    props: { direction: "vertical" },
     renderTypeAsKey: [],
     data: {
       v1: [{ value: "高147.6" }, { value: "宽71.6" }, { value: "厚7.8" }],
@@ -195,32 +195,101 @@ const rows = reactive<TableProps<DataType>["rows"]>([
   {
     label: "机型特色",
     type: "group-text",
-    props: { separate: true},
+    props: { direction: "normal", separate: true },
     renderTypeAsKey: [],
     data: {
-      v1: [{ value: "IOS 18 人脸识别" }, { value: "X轴线性马达" }, { value: "IP68" }, { value: "灵动岛" }, { value: "HDR显示" }, { value: "APPLE 智能" }, { value: "USB2.0" }, { value: "MsgSafe" }, { value: "Type-C" }, {value: '单频卫星'} ],
-      v2: [{ value: "IOS 18 人脸识别" }, { value: "X轴线性马达" }, { value: "IP68" }, { value: "灵动岛" }, { value: "HDR显示" }, { value: "APPLE 智能" }, { value: "USB2.0" }, { value: "MsgSafe" }, { value: "Type-C" }, {value: '单频卫星'} ],
-      v3: [{ value: "IOS 18 人脸识别" }, { value: "X轴线性马达" }, { value: "IP68" }, { value: "灵动岛" }, { value: "HDR显示" }, { value: "APPLE 智能" }, { value: "USB2.0" }, { value: "MsgSafe" }, { value: "Type-C" }, {value: '单频卫星'} ],
-      v4: [{ value: "IOS 18 人脸识别" }, { value: "X轴线性马达" }, { value: "IP68" }, { value: "灵动岛" }, { value: "HDR显示" }, { value: "APPLE 智能" }, { value: "USB2.0" }, { value: "MsgSafe" }, { value: "Type-C" }, {value: '单频卫星'} ],
+      v1: [
+        { value: "IOS 18" },
+        { value: "人脸识别" },
+        { value: "X轴线性马达" },
+        { value: "IP68" },
+        { value: "灵动岛" },
+        { value: "HDR显示" },
+        { value: "APPLE 智能" },
+        { value: "USB2.0" },
+        { value: "MsgSafe" },
+        { value: "Type-C" },
+        { value: "单频卫星" },
+      ],
+      v2: [
+        { value: "IOS 18 人脸识别" },
+        { value: "X轴线性马达" },
+        { value: "IP68" },
+        { value: "灵动岛" },
+        { value: "HDR显示" },
+        { value: "APPLE 智能" },
+        { value: "USB2.0" },
+        { value: "MsgSafe" },
+        { value: "Type-C" },
+        { value: "单频卫星" },
+      ],
+      v3: [
+        { value: "IOS 18 人脸识别" },
+        { value: "X轴线性马达" },
+        { value: "IP68" },
+        { value: "灵动岛" },
+        { value: "HDR显示" },
+        { value: "APPLE 智能" },
+        { value: "USB2.0" },
+        { value: "MsgSafe" },
+        { value: "Type-C" },
+        { value: "单频卫星" },
+      ],
+      v4: [
+        { value: "IOS 18 人脸识别" },
+        { value: "X轴线性马达" },
+        { value: "IP68" },
+        { value: "灵动岛" },
+        { value: "HDR显示" },
+        { value: "APPLE 智能" },
+        { value: "USB2.0" },
+        { value: "MsgSafe" },
+        { value: "Type-C" },
+        { value: "单频卫星" },
+      ],
+    },
+  },
+  {
+    label: "官方售价",
+    type: "group-text",
+    props: { direction: "vertical", card: true },
+    renderTypeAsKey: [],
+    data: {
+      v1: [
+        { value: "5999元", style: { fontSize: "16px", color: "#FF7A7A" } },
+        { value: "8G+128G" },
+      ],
+      v2: [{ value: "\\", style: { fontSize: "16px", color: "#FF7A7A" } }],
+      v3: [
+        { value: "5999元", style: { fontSize: "16px", color: "#FF7A7A" } },
+        { value: "8G+128G" },
+      ],
+      v4: [{ value: "\\", style: { fontSize: "16px", color: "#FF7A7A" } }],
     },
   },
 ]);
 
 const tag = ref("其一");
 
-provide(POSTER_TAG, computed(() => tag.value));
+provide(
+  POSTER_TAG,
+  computed(() => tag.value)
+);
 provide(POSTER_TAG_SET_KEY, (payload: string) => (tag.value = payload));
 </script>
 
 <template>
-  <ElConfigProvider size="default">
-    <Container :width="containerConfig.width" ref="containerRef">
-      <Header class="mb-12" :tag="tag" />
-      <main class="px-6">
-        <Table :columns="columns" :rows="rows" />
-      </main>
-    </Container>
-  </ElConfigProvider>
+  <div class="flex justify-center">
+    <ElConfigProvider size="default">
+      <Container :width="containerConfig.width" ref="containerRef">
+        <Header class="mb-12" :tag="tag" />
+        <main class="px-6">
+          <Table :columns="columns" :rows="rows" />
+        </main>
+        <Footer />
+      </Container>
+    </ElConfigProvider>
+  </div>
 </template>
 
 <style>

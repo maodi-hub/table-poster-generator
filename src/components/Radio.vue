@@ -1,6 +1,6 @@
 <template>
   <el-radio-group v-model="value">
-    <el-radio v-for="item in FLEX_ALIGN" :key="item.value" :value="item.value">
+    <el-radio v-for="item in options" :key="item.value" :value="item.value">
       {{ item.label }}
     </el-radio>
   </el-radio-group>
@@ -11,16 +11,17 @@ import { ElRadioGroup, ElRadio } from "element-plus";
 
 import { computed } from "vue";
 
-import { FLEX_ALIGN } from "../constants";
-
 interface Props {
-  modelValue: string;
+  modelValue: any;
+  options?: { label: string; value: string }[];
 }
 
 interface Emit {
   (e: "update:modelValue", value: Props["modelValue"]): void;
 }
-const $props = defineProps<Props>();
+const $props = withDefaults(defineProps<Props>(), {
+  options: () => [],
+});
 const $emit = defineEmits<Emit>();
 
 const value = computed({

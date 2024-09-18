@@ -3,7 +3,6 @@ import type { LayoutConfig } from "../settingConfig";
 import { TableProps, ValueType } from "../type";
 import { debounce, isNumber } from "radash";
 import { DEFAULT_COLORS } from "@/constants";
-import { color } from "html2canvas/dist/types/css/types/color";
 
 const needPxSuffix = ["fontSize"];
 
@@ -71,11 +70,31 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
     },
   };
 
+  const rowProps: MergeGroup = {
+    hydrate: (_data, row, _column, _rowIdx, _colIdx) => {
+      const props =
+        layout.value.find((item) => item.type === "row")?.children || [];
+      const initialProps = (row.props ?? {}) as Record<string, any>;
+      form.props = props.reduce((pre, cur) => {
+        return {
+          ...pre,
+          [cur.field]: initialProps[cur.field] ?? cur.defaultValue,
+        };
+      }, {});
+    },
+    mergeData: () => {
+      const props = form.props || {};
+      if (dataInfo.row && dataInfo.rowIdx !== void 0) {
+        dataInfo.row.props = props;
+      }
+    },
+  };
+
   const groupMerge = (type: "text" | "group"): MergeGroup => {
-    const isGroup = type ==="group";
-    const colorDefault = isGroup ? "#fff" : "#000"
+    const isGroup = type === "group";
+    const colorDefault = isGroup ? "#fff" : "#000";
     return {
-      hydrate(data, _row, column, _rowIdx, _colIdx) {
+      hydrate(data, row, column, rowIdx, colIdx) {
         form.content = (data[column.dataIndex] as ValueType[]).map<ValueType>(
           (item, idx) => {
             const data = {
@@ -83,6 +102,7 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
               style: {
                 ...item.style,
                 color: (item.style && item.style.color) ?? colorDefault,
+                fontWeight: (item.style && item.style.fontWeight) ?? "700",
                 fontSize:
                   (item.style &&
                     item.style.fontSize &&
@@ -98,6 +118,8 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
             return data;
           }
         );
+
+        rowProps.hydrate(data, row, column, rowIdx, colIdx);
       },
       mergeData() {
         if (dataInfo.data && dataInfo.col) {
@@ -105,7 +127,10 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
             form.content as ValueType[]
           ).map((item) => ({
             value: item.value,
-            style: Object.keys({ ...item.style, color: (item.style && item.style.color) ?? colorDefault }).reduce((pre, cur) => {
+            style: Object.keys({
+              ...item.style,
+              color: (item.style && item.style.color) ?? colorDefault,
+            }).reduce((pre, cur) => {
               if (needPxSuffix.includes(cur))
                 return {
                   ...pre,
@@ -119,6 +144,8 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
             }, {}),
           }));
         }
+
+        rowProps.mergeData();
       },
     };
   };

@@ -8,12 +8,14 @@
           <template v-for="(col, colIdx) in columns" :key="col">
             <div
               :class="[
-                'col',
+                'col relative',
                 {
                   'flex-1 min-w-0 overflow-hidden': colIdx >= 1,
                   'bg-white': colIdx > 0,
                   'rounded-tl-lg': rowIdx === 0 && colIdx === 1,
                   'rounded-bl-lg': rowIdx === rows.length - 1 && colIdx === 1,
+                  'has-before-mask': colIdx > 0 && rowIdx % 2 === 1,
+                  'has-after-mask': colIdx > 0 && colIdx % 2 === 1,
                 },
               ]"
               :style="{ width: col.width }"
@@ -21,11 +23,9 @@
               <div
                 ref="cellRef"
                 :class="[
-                  'cell flex justify-center items-center px-6 py-3',
+                  'cell h-full w-full flex justify-center items-center px-6 py-3 absolute top-0 right-0 bottom-0 left-0 z-10',
                   {
                     'cell-header': colIdx === 0,
-                    'has-before-mask': colIdx > 0 && rowIdx % 2 === 1,
-                    'has-after-mask': colIdx > 0 && colIdx % 2 === 1,
                     // 'is-current':
                     //   anchorPostion.x === colIdx && anchorPostion.y === rowIdx,
                   },
@@ -126,11 +126,11 @@ const { handleAddColumn, handleAddRow, handleDelColumn, handleDelRow } =
 const onLayoutSubmit = ({
   type,
   value: label,
-  ...props
+  props
 }: {
   type: string;
   value: string;
-  direction?: string;
+  props: any
 }) => {
   handleAddRow(
     type as "img" | "group" | "text",
@@ -167,7 +167,7 @@ const onLayoutDel = ({
   }
 
   if (type === "horizontal") {
-    if ($props.rows.length <= 2) {
+    if ($props.rows.length <= 1) {
       ElMessage.warning("至少保留一行");
       return;
     }
@@ -229,8 +229,30 @@ const handleClose = () => {
 </script>
 
 <style scoped lang="scss">
+.col {
+  &::after,
+  &::before {
+    content: none;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: #0000000d;
+    pointer-events: none;
+  }
+
+  &.has-after-mask::after {
+    content: "";
+  }
+
+  &.has-before-mask::before {
+    content: "";
+  }
+}
 .cell {
   position: relative;
+  border: none;
   &.is-current {
     position: relative;
     &::after {
@@ -247,26 +269,6 @@ const handleClose = () => {
 
   &:not(.cell-header) {
     @apply text-sm font-bold text-black p-3 flex-shrink-0;
-  }
-
-  &::after,
-  &::before {
-    content: none;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: #0000000d;
-    pointer-events: none;
-  }
-
-  &.has-after-mask::after {
-    content: "";
-  }
-
-  &.has-before-mask::before {
-    content: "";
   }
 }
 </style>

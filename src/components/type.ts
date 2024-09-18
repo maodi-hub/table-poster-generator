@@ -12,7 +12,9 @@ export interface GroupProps<T> extends CommonProp<T> {
 
 export interface GroupTextProps<T> extends CommonProp<T>{
   direction?: "horizontal" | "vertical" | "normal";
-  separate?:boolean
+  separate?:boolean;
+  card?:boolean;
+  cardBgColor?: string;
 }
 
 export interface ImageProps<T> extends CommonProp<T> {};

@@ -9,13 +9,13 @@ export function useTableLayout(
   columns: TableProps<any>["columns"]
 ) {
   const handleAddRow = (
-    type: "img" | "text" | "group",
+    type: "img" | "text" | "group" | "group-text",
     label: string,
     idx: number,
     props = {}
   ) => {
     const keys = Object.keys(rows[rows.length - 1].data);
-    const isGroup = type === "group";
+    const isGroup = ["group", "group-text"].includes(type);
     const data: DataType = keys.reduce((pre, cur) => {
       pre[cur] = isGroup
         ? [{ value: "---", style: {} }, { value: "---", style: {} }]
@@ -51,7 +51,7 @@ export function useTableLayout(
         data[dataIndex] = { value: type === "img" ? "" : "---" };
         return;
       }
-      if (type === "group") {
+      if (["group", "group-text"].includes(type || "text")) {
         data[dataIndex] = [{ value: "---" }, { value: "---" }];
         return;
       }

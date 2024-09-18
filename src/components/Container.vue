@@ -1,6 +1,6 @@
 <template>
   <div id="container"
-    class="h-screen bg-[url('@/assets/bg.png')] bg-cover bg-center bg-no-repeat bg-[#0E0E0E] mx-auto max-w-full"
+    class="min-h-screen bg-[url('@/assets/bg.png')] bg-cover bg-center bg-no-repeat bg-[#0E0E0E]"
     :style="{ width: width + 'px' }">
     <slot />
   </div>
