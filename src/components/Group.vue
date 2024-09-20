@@ -35,7 +35,7 @@
 import { reactive, watch } from "vue";
 import type { GroupProps, ValueType } from "./type";
 
-import { DEFAULT_COLORS } from "../constants";
+import { DEFAULT_COLORS } from "./constants";
 
 const $props = withDefaults(defineProps<GroupProps<T>>(), {
   direction: "horizontal",

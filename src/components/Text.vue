@@ -1,5 +1,5 @@
 <template>
-  <span :style="text?.style">
+  <span :style="{...text?.style}">
     {{ text }}
   </span>
 </template>
@@ -27,4 +27,5 @@ watch(
 );
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+</style>

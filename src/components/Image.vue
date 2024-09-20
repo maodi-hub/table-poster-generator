@@ -3,10 +3,12 @@
     :auto-upload="false"
     :show-file-list="false"
     @change="onChange"
-    @click.stop
   >
     <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-    <div v-else class="border border-dashed border-gray-700 rounded-md w-full h-full flex justify-center items-center">
+    <div
+      v-else
+      class="border border-dashed border-gray-700 rounded-md w-full h-full flex justify-center items-center"
+    >
       <el-icon class="avatar-uploader-icon">
         <Plus />
       </el-icon>
@@ -20,10 +22,16 @@ import { Plus } from "@element-plus/icons-vue";
 import type { ImageProps, ValueType } from "./type";
 
 import { ref, watch } from "vue";
+import { isObject } from "radash";
 
 const $props = defineProps<ImageProps<T>>();
 
-const imageUrl = ref(($props.data[$props.valueKey] as ValueType).value);
+const getValue = () => {
+  const value = $props.data[$props.valueKey];
+  return isObject(value) ? (value as unknown as ValueType).value : value;
+};
+
+const imageUrl = ref(getValue());
 
 const onChange = (upload: UploadFile) => {
   handleReaderFile(upload.raw as File);
@@ -34,6 +42,10 @@ const handleReaderFile = (file: File) => {
   reader.onload = function (e) {
     const data = e.target?.result;
     imageUrl.value = data as string;
+    // @ts-ignore
+    $props.data[$props.valueKey] = isObject($props.data[$props.valueKey])
+      ? { ...$props.data[$props.valueKey], value: data }
+      : data;
   };
   reader.readAsDataURL(file);
 };
@@ -41,8 +53,9 @@ const handleReaderFile = (file: File) => {
 watch(
   () => $props.data[$props.valueKey],
   () => {
-    imageUrl.value = ($props.data?.[$props.valueKey] as ValueType)?.value;
-  }
+    imageUrl.value = getValue();
+  },
+  { deep: true }
 );
 </script>
 

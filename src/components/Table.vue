@@ -4,7 +4,7 @@
       class="wrapper rounded-lg overflow-hidden bg-[#ffffff05] backdrop-blur"
     >
       <template v-for="(row, rowIdx) in rows" :key="row">
-        <div :class="['row flex', { 'bg-[#ffffff0d]': rowIdx % 2 === 1 }]">
+        <div :class="['row flex', { 'bg-[#ffffff0d]': rowIdx % 2 === 1 }]" :style="row.style">
           <template v-for="(col, colIdx) in columns" :key="col">
             <div
               :class="[
@@ -23,17 +23,15 @@
               <div
                 ref="cellRef"
                 :class="[
-                  'cell h-full w-full flex justify-center items-center px-6 py-3 absolute top-0 right-0 bottom-0 left-0 z-10',
+                  'cell h-full w-full flex justify-center items-center px-4 py-3 absolute top-0 right-0 bottom-0 left-0 z-10 can-edit',
                   {
                     'cell-header': colIdx === 0,
-                    // 'is-current':
-                    //   anchorPostion.x === colIdx && anchorPostion.y === rowIdx,
                   },
                 ]"
                 :data-rowIdx="rowIdx"
                 :data-colIdx="colIdx"
-                :style="row.cellStyles![colIdx]"
-                @click="handleOpen(row, col, rowIdx, colIdx)"
+                :style="getCellStyle(row, colIdx)"
+                @click="$emit('open', row, col, rowIdx, colIdx)"
               >
                 <template v-if="colIdx !== 0">
                   <template
@@ -60,6 +58,7 @@
                   </template>
                 </template>
                 <template v-else>
+                  <img v-if="row.icon" :src="row.icon" alt="" class="mr-2.5 flex-shrink-0 flex-grow-0 w-4 h-[unset]"/>
                   <component
                     :is="component.text"
                     :data="row"
@@ -73,45 +72,23 @@
         </div>
       </template>
     </div>
-
-    <ope-drawer
-      ref="opeDrawerRef"
-      @cancel="handleSetPotion(void 0, void 0)"
-      @add="onLayoutAdd"
-      @del="onLayoutDel"
-      @sort-update="onLayoutSort"
-    />
-    <AddTableRowModal ref="tableRowAddRef" @add="onLayoutSubmit" />
   </div>
 </template>
 
 <script setup lang="ts" generic="T extends DataType">
-import OpeDrawer, { type LayoutProps } from "./OpeDrawer.vue";
-import AddTableRowModal from "./AddTableRowModal.vue";
-import type { SortableEvent } from "vue-draggable-plus";
-
-import type { DataType, TableProps } from "./type";
+import type { DataType, TableProps, TableEmit } from "./type";
 
 import {
   defineAsyncComponent,
-  reactive,
   type Component,
-  shallowRef,
 } from "vue";
-import { useTableLayout } from "./hooks/useTableLayout";
-import { ElMessage } from "element-plus";
 
-const $props = withDefaults(defineProps<TableProps<T>>(), {
+withDefaults(defineProps<TableProps<T>>(), {
   columns: () => [],
   rows: () => [],
 });
 
-$props.rows.forEach(
-  (row) =>
-    (row.cellStyles = $props.columns.map(
-      (_, idx) => row.cellStyles?.[idx] || {}
-    ))
-);
+defineEmits<TableEmit<T>>();
 
 const component: Record<"img" | "group" | "group-text" | "text", Component> = {
   img: defineAsyncComponent(() => import("./Image.vue")),
@@ -120,112 +97,18 @@ const component: Record<"img" | "group" | "group-text" | "text", Component> = {
   text: defineAsyncComponent(() => import("./Text.vue")),
 };
 
-const { handleAddColumn, handleAddRow, handleDelColumn, handleDelRow } =
-  useTableLayout($props.rows, $props.columns);
 
-const onLayoutSubmit = ({
-  type,
-  value: label,
-  props
-}: {
-  type: string;
-  value: string;
-  props: any
-}) => {
-  handleAddRow(
-    type as "img" | "group" | "text",
-    label,
-    $props.rows.length,
-    props
-  );
-};
-
-const tableRowAddRef = shallowRef<InstanceType<typeof AddTableRowModal>>();
-const onLayoutAdd = (type: LayoutProps["direction"]) => {
-  if (type === "vertical") {
-    handleAddColumn($props.columns.length);
+const getCellStyle = (row: TableProps<T>["rows"][number], colIdx: number) => {
+  if (!row.cellStyles) {
+    row.cellStyles = [];
   }
-
-  if (type === "horizontal") {
-    tableRowAddRef.value?.handleOpen();
+  let style = row.cellStyles[colIdx];
+  if (!style) {
+    style = row.cellStyles[colIdx] = {};
   }
+  return style;
 };
 
-const onLayoutDel = ({
-  type,
-  idx,
-}: {
-  type: LayoutProps["direction"];
-  idx: number;
-}) => {
-  if (type === "vertical") {
-    if ($props.columns.length <= 2) {
-      ElMessage.warning("至少保留一列");
-      return;
-    }
-    handleDelColumn(idx);
-  }
-
-  if (type === "horizontal") {
-    if ($props.rows.length <= 1) {
-      ElMessage.warning("至少保留一行");
-      return;
-    }
-    handleDelRow(idx);
-  }
-};
-
-const onLayoutSort = ({
-  sortEvent,
-  type,
-}: {
-  sortEvent: SortableEvent;
-  type: LayoutProps["direction"];
-}) => {
-  if (type === "horizontal") return;
-
-  const { oldIndex, newIndex } = sortEvent;
-  if (oldIndex === newIndex) return;
-
-  $props.rows.map((item) => {
-    [item.cellStyles![newIndex!], item.cellStyles![oldIndex!]] = [
-      item.cellStyles![oldIndex!],
-      item.cellStyles![newIndex!],
-    ];
-  });
-};
-
-const anchorPostion = reactive<{
-  x: number | undefined;
-  y: number | undefined;
-}>({
-  x: void 0,
-  y: void 0,
-});
-
-const handleSetPotion = (x?: number, y?: number) => {
-  anchorPostion.x = x;
-  anchorPostion.y = y;
-};
-
-const opeDrawerRef = shallowRef<InstanceType<typeof OpeDrawer>>();
-const handleOpen = (
-  row: TableProps<T>["rows"][number],
-  column: TableProps<T>["columns"][number],
-  rowIdx: number,
-  colIdx: number
-) => {
-  if (colIdx > 0 && row.type === "img") {
-    handleClose();
-    return;
-  }
-  handleSetPotion(colIdx, rowIdx);
-  opeDrawerRef.value?.handleShow(row, column, rowIdx, colIdx);
-};
-
-const handleClose = () => {
-  opeDrawerRef.value?.handleClose();
-};
 </script>
 
 <style scoped lang="scss">
@@ -253,15 +136,6 @@ const handleClose = () => {
 .cell {
   position: relative;
   border: none;
-  &.is-current {
-    position: relative;
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border: 2px solid #43cf7c;
-    }
-  }
 
   &.cell-header {
     @apply text-xs justify-start;

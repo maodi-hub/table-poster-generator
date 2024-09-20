@@ -7,7 +7,7 @@
     class="flex flex-col gap-2"
     draggable=".move"
   >
-    <template v-for="(item, idx) in value" :key="idx">
+    <template v-for="(item, idx) in value" :key="item">
       <TextInput :model-value="item" class="move">
         <template #prefix>
           <ElIcon class="handle cursor-move"><Rank /></ElIcon>
@@ -25,13 +25,13 @@
 import { VueDraggable } from "vue-draggable-plus";
 import { ElIcon, ElButton } from "element-plus";
 import { Rank, Minus, Plus } from "@element-plus/icons-vue";
-import TextInput from "./TextInput.vue";
+import TextInput from "./PanelTextInput.vue";
 
 import type { ValueType } from "./type";
 
 import { computed } from "vue";
 
-import { DEFAULT_COLORS } from "../constants";
+import { DEFAULT_COLORS } from "./constants";
 
 interface Props {
   modelValue?: ValueType[];

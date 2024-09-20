@@ -21,7 +21,7 @@ import { ElColorPicker, ElInput } from "element-plus";
 
 import { computed } from "vue";
 
-import { DEFAULT_COLORS } from "../constants";
+import { DEFAULT_COLORS } from "./constants";
 
 interface Props {
   modelValue?: string;

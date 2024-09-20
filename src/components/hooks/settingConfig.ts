@@ -2,11 +2,11 @@ import { FLEX_ALIGN } from "../constants";
 
 export interface LayoutConfig {
   label: string;
-  type: "style" | "content" | "row";
+  type: "style" | "content" | "row" | "rowStyle";
   children: {
     label: string;
     field: string;
-    type: "color" | "size" | "text" | "group" | "single";
+    type: "color" | "size" | "text" | "group" | "single" | "image";
     unit?: string;
     defaultValue?: any;
     cellHeaderDefaultValue?: string;
@@ -15,6 +15,19 @@ export interface LayoutConfig {
 }
 
 export const textConfig: LayoutConfig[] = [
+  {
+    label: "行样式",
+    type: "rowStyle",
+    children: [
+      {
+        label: "行高",
+        field: "height",
+        type: "size",
+        defaultValue: "51px",
+        cellHeaderDefaultValue: "51px"
+      },
+    ],
+  },
   {
     label: "单元格样式",
     type: "style",
@@ -59,8 +72,8 @@ export const textConfig: LayoutConfig[] = [
 ];
 
 export const groupConfig: LayoutConfig[] = [
-  { 
-    label:"单元格配置",
+  {
+    label: "行配置",
     type: "row",
     children: [
       {
@@ -73,8 +86,8 @@ export const groupConfig: LayoutConfig[] = [
           { label: "垂直", value: "vertical" },
         ],
       },
-    ]
-   },
+    ],
+  },
   {
     label: "",
     type: "content",
@@ -84,7 +97,30 @@ export const groupConfig: LayoutConfig[] = [
   },
 ];
 
+export const imgConfig: LayoutConfig[] = [
+  {
+    label: "",
+    type: "content",
+    children: [
+      { label: "内容", field: "content", type: "image", defaultValue: "" },
+    ],
+  },
+]
+
 export const groupTextConfig: LayoutConfig[] = [
+  {
+    label: "单元格样式",
+    type: "style",
+    children: [
+      {
+        label: "字体颜色",
+        field: "color",
+        type: "color",
+        defaultValue: "#000",
+        cellHeaderDefaultValue: "#fff",
+      },
+    ],
+  },
   {
     label: "单元格配置",
     type: "row",

@@ -1,4 +1,3 @@
-import html2canvas from "html2canvas";
 import * as domToImage from "./domToImage";
 
 // export default function getPoster(el: HTMLElement) {
@@ -23,5 +22,6 @@ import * as domToImage from "./domToImage";
 // }
 
 export default function getPoster(el: HTMLElement) {
-  return domToImage.toPng(el)
+  
+  return domToImage.toBlob(el)
 }

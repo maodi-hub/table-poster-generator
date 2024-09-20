@@ -13,7 +13,7 @@ import { computed } from "vue";
 
 interface Props {
   modelValue: any;
-  options?: { label: string; value: string }[];
+  options?: { label: string; value: any }[];
 }
 
 interface Emit {

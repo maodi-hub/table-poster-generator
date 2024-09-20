@@ -15,6 +15,7 @@ var defaultOptions = {
 
 var domtoimage = {
   toPng: toPng,
+  toBlob: toBlob,
   impl: {
     fontFaces: fontFaces,
     images: images,
@@ -83,6 +84,10 @@ export function toPng(node, options = {}) {
   });
 }
 
+export function toBlob(node, options = {}) {
+  return draw(node, options || {}).then(util.canvasToBlob);
+}
+
 function copyOptions(options) {
   // Copy options to impl options for use in impl
   if (typeof options.imagePlaceholder === "undefined") {
@@ -106,7 +111,7 @@ function draw(domNode, options) {
       var canvas = newCanvas(domNode);
       const dpi = window.devicePixelRatio > 1 ? window.devicePixelRatio : 1;
       const ctx = canvas.getContext("2d");
-      ctx.scale(dpi, dpi)
+      ctx.scale(dpi, dpi);
       ctx.drawImage(image, 0, 0);
       return canvas;
     });
@@ -370,8 +375,8 @@ function newUtil() {
     return url.search(/^(data:)/) !== -1;
   }
 
-  function toBlob(canvas) {
-    return new Promise(function (resolve) {
+  function toBlob(canvas: HTMLCanvasElement) {
+    return new Promise<[Blob, HTMLCanvasElement]>(function (resolve) {
       var binaryString = window.atob(canvas.toDataURL().split(",")[1]);
       var length = binaryString.length;
       var binaryArray = new Uint8Array(length);
@@ -379,18 +384,19 @@ function newUtil() {
       for (var i = 0; i < length; i++)
         binaryArray[i] = binaryString.charCodeAt(i);
 
-      resolve(
+      resolve([
         new Blob([binaryArray], {
           type: "image/png",
-        })
-      );
+        }),
+        canvas,
+      ]);
     });
   }
 
-  function canvasToBlob(canvas) {
+  function canvasToBlob(canvas: HTMLCanvasElement) {
     if (canvas.toBlob)
-      return new Promise(function (resolve) {
-        canvas.toBlob(resolve);
+      return new Promise<[Blob, HTMLCanvasElement]>(function (resolve) {
+        canvas.toBlob((blob) => resolve([blob, canvas]));
       });
 
     return toBlob(canvas);

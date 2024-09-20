@@ -1,12 +1,12 @@
 import type { DataType, TableProps, ValueType } from "../type";
 
-import { provide, computed } from "vue";
+import { type ComputedRef,provide, computed, unref } from "vue";
 
-import { COLUMNS_KEY, ROWS_KEY } from "../../constants";
+import { COLUMNS_KEY, ROWS_KEY } from "../constants";
 
 export function useTableLayout(
-  rows: TableProps<any>["rows"],
-  columns: TableProps<any>["columns"]
+  rows: ComputedRef<TableProps<any>["rows"]>,
+  columns: ComputedRef<TableProps<any>["columns"]>
 ) {
   const handleAddRow = (
     type: "img" | "text" | "group" | "group-text",
@@ -14,7 +14,7 @@ export function useTableLayout(
     idx: number,
     props = {}
   ) => {
-    const keys = Object.keys(rows[rows.length - 1].data);
+    const keys = Object.keys(unref(rows)[unref(rows).length - 1].data);
     const isGroup = ["group", "group-text"].includes(type);
     const data: DataType = keys.reduce((pre, cur) => {
       pre[cur] = isGroup
@@ -23,29 +23,29 @@ export function useTableLayout(
       return pre;
     }, {} as DataType);
     
-    rows.splice(idx, 0, {
+    unref(rows).splice(idx, 0, {
       label,
       type,
       style: {},
       renderTypeAsKey: [],
       data,
       props,
-      cellStyles: columns.map(() => ({})),
+      cellStyles: unref(columns).map(() => ({})),
     });
   };
 
   const handleDelRow = (index: number) => {
-    rows.splice(index, 1);
+    unref(rows).splice(index, 1);
   };
 
   const handleAddColumn = (idx: number) => {
     const index = idx === 0 ? 1 : idx;
-    const dataIndex = `v${columns.length}`;
-    columns.splice(index, 0, {
+    const dataIndex = `v${unref(columns).length}`;
+    unref(columns).splice(index, 0, {
       dataIndex,
     });
 
-    rows.forEach(({ type, data }) => {
+    unref(rows).forEach(({ type, data }) => {
       if (Reflect.has(data, dataIndex)) return;
       if (["img", "text"].includes(type || "text")) {
         data[dataIndex] = { value: type === "img" ? "" : "---" };
@@ -59,16 +59,16 @@ export function useTableLayout(
   };
 
   const handleDelColumn = (index: number) => {
-    columns.splice(index, 1);
+    unref(columns).splice(index, 1);
   };
 
   provide(COLUMNS_KEY, [
     computed({
       get() {
-        return columns;
+        return unref(columns);
       },
       set(val) {
-        columns.splice(0, columns.length, ...val);
+        unref(columns).splice(0, unref(columns).length, ...val);
       },
     }),
     handleAddColumn,
@@ -77,10 +77,10 @@ export function useTableLayout(
   provide(ROWS_KEY, [
     computed({
       get() {
-        return rows;
+        return unref(rows);
       },
       set(val) {
-        rows.splice(0, rows.length, ...val);
+        unref(rows).splice(0, unref(rows).length, ...val);
       },
     }),
     handleAddRow,

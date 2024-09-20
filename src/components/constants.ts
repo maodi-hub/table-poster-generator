@@ -1,5 +1,5 @@
 import type { InjectionKey, ComputedRef } from "vue";
-import type { ColumnType, DataType, RowType } from "./components/type";
+import type { ColumnType, DataType, RowType } from "./type";
 
 export const DEFAULT_COLORS = [
   "#A5D63F",
