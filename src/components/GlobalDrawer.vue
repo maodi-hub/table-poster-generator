@@ -93,7 +93,7 @@
       <el-form-item label="平台图标">
         <div class="flex-1">
           <el-form-item class="!mb-4">
-            <Image class="bg-gray-50" :data="form.platIcon" value-key="value" />
+            <Image class="bg-gray-100 rounded-lg overflow-hidden" :data="form.platIcon" value-key="value" />
           </el-form-item>
           <el-form-item>
             <el-select v-model="form.platIcon.value" placeholder="请选择" @change="onPlatChange">

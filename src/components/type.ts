@@ -1,5 +1,4 @@
 import type { CSSProperties } from "vue";
-import Table from "./Table.vue";
 
 export interface CommonProp<T = any> {
   data: T;

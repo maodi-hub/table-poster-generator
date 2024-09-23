@@ -23,14 +23,6 @@
           <template v-for="(layItem, idx) in layout" :key="idx">
             <template v-if="!!layItem.children.length">
               <h3 class="mb-4">{{ layItem.label }}</h3>
-              <!-- <el-form-item>
-                <component
-                  v-if="dataInfo.col && dataInfo.col.dataIndex === 'title'"
-                  :is="components['image']"
-                  :data="form"
-                  valueKey="icon"
-                />
-              </el-form-item> -->
               <el-form-item
                 v-for="(item, idx) in layItem.children"
                 :key="idx"
@@ -67,6 +59,15 @@
               <el-divider />
             </template>
           </template>
+          <el-form-item>
+            <component
+              v-if="dataInfo.col && dataInfo.col.dataIndex === 'title'"
+              :is="components['image']"
+              class="bg-gray-100 rounded-lg overflow-hidden" 
+              :data="form"
+              valueKey="icon"
+            />
+          </el-form-item>
         </el-form>
         <template v-else>
           <ElEmpty description="请选择需要修改的部分" />
