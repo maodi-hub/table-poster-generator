@@ -10,7 +10,7 @@ import type { TableProps, ValueType } from "../type";
 import { DEFAULT_COLORS } from "@/components/constants";
 
 import usePosterStore from "@/store/poster";
-import { debounce, isNumber } from "radash";
+import { debounce, isNumber, omit } from "radash";
 
 const needPxSuffix = ["fontSize", "width", "height"];
 
@@ -53,16 +53,6 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
 
   const textMerge: MergeGroup = {
     hydrate: (data, row, column, rowIdx, colIdx) => {
-      const cellStyle = row.cellStyles?.[colIdx] || {};
-      layout.value[0].children.map((item) => {
-        let value =
-          (cellStyle[item.field as keyof CSSProperties] ??
-            (colIdx === 0 ? item.cellHeaderDefaultValue : item.defaultValue) ??
-            "") + "";
-        if (item.unit) value = value.replace(item.unit, "");
-        form[item.field] = value;
-      });
-
       form.content =
         colIdx === 0 ? row.label : (data[column.dataIndex] as ValueType).value;
 
@@ -77,18 +67,6 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
         else
           (dataInfo.data[dataInfo.col.dataIndex] as ValueType).value =
             form.content;
-      }
-
-      if (dataInfo.row && isNumber(dataInfo.colIdx)) {
-        layout.value[0].children.map((item) => {
-          if (!dataInfo.row!.cellStyles?.[dataInfo.colIdx]) {
-            dataInfo.row!.cellStyles![dataInfo.colIdx] = {};
-          }
-          //@ts-ignore
-          dataInfo.row!.cellStyles![dataInfo.colIdx][
-            item.field as keyof CSSProperties
-          ] = form[item.field] + (item.unit ?? "");
-        });
       }
 
       if (dataInfo.colIdx === 0) {
@@ -119,68 +97,54 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
         layout.value.find((item) => item.type === "rowStyle")?.children || [];
       const rowStyle = row.style || {};
       form.style = rowStyleProps.reduce((pre, cur) => {
+        const defaultValue = cur.defaultValue ?? "";
         return {
           ...pre,
-          [cur.field]:
-            rowStyle[cur.field as keyof CSSProperties] ?? cur.defaultValue,
+          [cur.field]: (
+            rowStyle[cur.field as keyof CSSProperties] ?? defaultValue
+          ).toString(),
         };
       }, {});
+
       const props =
         layout.value.find((item) => item.type === "row")?.children || [];
       const initialProps = (row.props ?? {}) as Record<string, any>;
       form.props = props.reduce((pre, cur) => {
+        const defaultValue = cur.defaultValue ?? "";
         return {
           ...pre,
-          [cur.field]: initialProps[cur.field] ?? cur.defaultValue,
+          [cur.field]: initialProps[cur.field] ?? defaultValue,
         };
       }, {});
 
       const cellStyle = row.cellStyles?.[colIdx] || {};
+
       layout.value
         .find((item) => item.type === "style")
         ?.children.map((item) => {
+          const defaultValue = item.defaultValue ?? "";
+          const cellDefaultValue = item.cellHeaderDefaultValue ?? "";
+
           let value =
-            (cellStyle[item.field as keyof CSSProperties] ??
-              (colIdx === 0
-                ? item.cellHeaderDefaultValue
-                : item.defaultValue) ??
-              "") + "";
-          if (item.unit) value = value.replace(item.unit, "");
+            cellStyle[item.field as keyof CSSProperties] ??
+            (!colIdx ? cellDefaultValue : defaultValue);
+
           form[item.field] = value;
         });
     },
     mergeData: () => {
       const props = form.props || {};
       if (dataInfo.row && dataInfo.rowIdx !== void 0) {
-        dataInfo.row.props = props;
+        if (!dataInfo.row.props) dataInfo.row.props = {};
+        Object.assign(dataInfo.row.props, {...props});
       }
 
       if (dataInfo.row && isNumber(dataInfo.colIdx)) {
-        layout.value
-          .find((item) => item.type === "style")
-          ?.children.map((item) => {
-            if (!dataInfo.row!.cellStyles?.[dataInfo.colIdx]) {
-              dataInfo.row!.cellStyles![dataInfo.colIdx] = {};
-            }
-            //@ts-ignore
-            dataInfo.row!.cellStyles![dataInfo.colIdx][
-              item.field as keyof CSSProperties
-            ] = item.unit
-              ? form[item.field].replace(item.unit, "") + item.unit
-              : form[item.field];
-          });
+        if (!dataInfo.row.cellStyles) dataInfo.row.cellStyles = [];
+        Object.assign(dataInfo.row.cellStyles[dataInfo.colIdx],{...omit(form, ["content", "style", "props"])})
 
-        layout.value
-          .find((item) => item.type === "rowStyle")
-          ?.children.map((item) => {
-            if (!dataInfo.row?.style) {
-              dataInfo.row!.style = {};
-            }
-            //@ts-ignore
-            dataInfo.row!.style![item.field as keyof CSSProperties] = item.unit
-              ? form.style[item.field].replace(item.unit, "") + item.unit
-              : form.style[item.field];
-          });
+        if (!dataInfo.row.style) dataInfo.row.style = {};
+        Object.assign(dataInfo.row!.style, { ...form.style });
       }
     },
   };
@@ -202,7 +166,7 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
                   (item.style &&
                     item.style.fontSize &&
                     parseFloat(item.style.fontSize + "").toString()) ??
-                  "12",
+                  "12px",
               },
             };
 
@@ -264,7 +228,6 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
   ) => {
     const type = colIdx === 0 ? "text" : row.type || "text";
     mergeFromType[type].hydrate(row.data, row, column, rowIdx, colIdx);
-    watchHandle.resume();
   };
 
   const mergeToTable = debounce({ delay: 100 }, () => {
@@ -272,13 +235,9 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
     mergeFromType[type].mergeData();
   });
 
-  const watchHandle = watch(
-    form,
-    () => {
-      mergeToTable();
-    },
-    { deep: true }
-  );
+  watch(form, () => {
+    mergeToTable();
+  }, {deep: true});
 
   const $poster = usePosterStore();
   watch(
@@ -300,7 +259,6 @@ export function useOpeForm(layout: ComputedRef<LayoutConfig[]>) {
       rowIdx: number,
       colIdx: number
     ) {
-      watchHandle.pause();
       dataInfo.data = row.data;
       dataInfo.row = row;
       dataInfo.col = column;

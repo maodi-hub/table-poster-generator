@@ -35,6 +35,7 @@ watch(
 <style scoped lang="scss">
 .vertical {
   @apply flex-col;
+  line-height: 1
 }
 
 .horizontal {
@@ -60,10 +61,10 @@ watch(
 
 .separate {
   @apply text-center #{!important};
+  line-height: 1em;
   span {
     @apply inline-block border-black;
     border-right-width: 1.5px;
-    line-height: 1em;
     &:last-child {
       @apply border-r-0;
     }

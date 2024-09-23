@@ -116,6 +116,7 @@ const DefaultData1 = (): PosterItem => ({
       label: "机器型号",
       icon: getIcon("1"),
       renderTypeAsKey: [],
+      style: { height: "42px" },
       data: {
         v1: { value: "iPhone16" },
         v2: { value: "iphone16 Plus" },
@@ -128,6 +129,7 @@ const DefaultData1 = (): PosterItem => ({
       icon: getIcon("2"),
       type: "img",
       renderTypeAsKey: [],
+      style: { height: "105px" },
       data: {
         v1: { value: phoneImg },
         v2: { value: phone2Img },
@@ -139,6 +141,7 @@ const DefaultData1 = (): PosterItem => ({
       label: "屏幕尺寸（英寸）",
       icon: getIcon("3"),
       renderTypeAsKey: [],
+      style: { height: "51px" },
       data: {
         v1: { value: "6.1" },
         v2: { value: "6.7" },
@@ -150,6 +153,7 @@ const DefaultData1 = (): PosterItem => ({
       label: "刷新率",
       icon: getIcon("4"),
       renderTypeAsKey: [],
+      style: { height: "51px" },
       data: {
         v1: { value: "60hz" },
         v2: { value: "60hz" },
@@ -161,6 +165,7 @@ const DefaultData1 = (): PosterItem => ({
       label: "触控采样率",
       icon: getIcon("5"),
       renderTypeAsKey: [],
+      style: { height: "51px" },
       data: {
         v1: { value: "240Hz" },
         v2: { value: "240Hz" },
@@ -173,6 +178,7 @@ const DefaultData1 = (): PosterItem => ({
       icon: getIcon("6"),
       type: "group",
       renderTypeAsKey: [],
+      style: { height: "51px" },
       data: {
         v1: ["P3广色域", "10bit"].map((item) => ({ value: item })),
         v2: ["P3广色域", "10bit"].map((item) => ({ value: item })),
@@ -184,6 +190,7 @@ const DefaultData1 = (): PosterItem => ({
       label: "屏幕材质",
       icon: getIcon("7"),
       renderTypeAsKey: [],
+      style: { height: "51px" },
       data: {
         v1: { value: "OLED" },
         v2: { value: "OLED" },
@@ -195,6 +202,7 @@ const DefaultData1 = (): PosterItem => ({
       label: "分辨率",
       icon: getIcon("8"),
       renderTypeAsKey: [],
+      style: { height: "51px" },
       data: {
         v1: { value: "2556×1179" },
         v2: { value: "2796×1290" },
@@ -206,6 +214,7 @@ const DefaultData1 = (): PosterItem => ({
       label: "调光技术",
       icon: getIcon("9"),
       renderTypeAsKey: [],
+      style: { height: "51px" },
       data: {
         v1: { value: "480hz PWM" },
         v2: { value: "480hz PWM" },
@@ -217,6 +226,7 @@ const DefaultData1 = (): PosterItem => ({
       label: "CPU类型",
       icon: getIcon("10"),
       renderTypeAsKey: [],
+      style: { height: "51px" },
       data: {
         v1: { value: "A 18" },
         v2: { value: "A 18" },
@@ -230,6 +240,7 @@ const DefaultData1 = (): PosterItem => ({
       type: "group",
       renderTypeAsKey: [],
       props: { direction: "vertical" },
+      style: {height: '170px'},
       data: {
         v1: ["48MP 主摄", "12MP长焦", "12MP前摄", "-----"].map((item) => ({
           value: item,
@@ -249,6 +260,7 @@ const DefaultData1 = (): PosterItem => ({
       label: "存储类型",
       icon: getIcon("12"),
       renderTypeAsKey: [],
+      style: { height: "51px" },
       data: {
         v1: { value: "NVMe" },
         v2: { value: "NVMe" },
@@ -260,6 +272,7 @@ const DefaultData1 = (): PosterItem => ({
       label: "内存类型",
       icon: getIcon("3"),
       renderTypeAsKey: [],
+      style: { height: "78px" },
       data: {
         v1: { value: "LPDDR5" },
         v2: { value: "LPDDR5" },
@@ -355,6 +368,7 @@ const DefaultData2 = (): PosterItem => ({
       label: "机器型号",
       icon: getIcon("1"),
       renderTypeAsKey: [],
+      style: { height: "42px" },
       data: {
         v1: { value: "iPhone16" },
         v2: { value: "iphone16 Plus" },
@@ -365,8 +379,8 @@ const DefaultData2 = (): PosterItem => ({
     {
       label: "电池容量",
       icon: getIcon("1-2"),
-
       renderTypeAsKey: [],
+      style: { height: "40px" },
       data: {
         v1: { value: "3561" },
         v2: { value: "4006" },
@@ -378,7 +392,7 @@ const DefaultData2 = (): PosterItem => ({
       label: "充电信息",
       type: "group",
       icon: getIcon("1-3"),
-
+      style: {height: "135px"},
       props: { direction: "vertical" },
       renderTypeAsKey: [],
       data: {
@@ -408,23 +422,23 @@ const DefaultData2 = (): PosterItem => ({
       label: "机身尺寸 (毫米)",
       type: "group-text",
       icon: getIcon("1-4"),
-
       props: { direction: "vertical" },
       renderTypeAsKey: [],
+      style: { height: "51px" },
       data: {
-        v1: [{ value: "高147.6" }, { value: "宽71.6" }, { value: "厚7.8" }],
-        v2: [{ value: "高147.6" }, { value: "宽71.6" }, { value: "厚7.8" }],
-        v3: [{ value: "高147.6" }, { value: "宽71.6" }, { value: "厚7.8" }],
-        v4: [{ value: "高147.6" }, { value: "宽71.6" }, { value: "厚7.8" }],
+        v1: [{ value: "高147.6", style: { fontSize: "10px" } }, { value: "宽71.6", style: { fontSize: "10px" } }, { value: "厚7.8", style: { fontSize: "10px" } }],
+        v2: [{ value: "高147.6", style: { fontSize: "10px" } }, { value: "宽71.6", style: { fontSize: "10px" } }, { value: "厚7.8", style: { fontSize: "10px" } }],
+        v3: [{ value: "高147.6", style: { fontSize: "10px" } }, { value: "宽71.6", style: { fontSize: "10px" } }, { value: "厚7.8", style: { fontSize: "10px" } }],
+        v4: [{ value: "高147.6", style: { fontSize: "10px" } }, { value: "宽71.6", style: { fontSize: "10px" } }, { value: "厚7.8", style: { fontSize: "10px" } }],
       },
     },
     {
       label: "机身材质",
       icon: getIcon("1-5"),
-
       type: "group-text",
       props: { direction: "vertical" },
       renderTypeAsKey: [],
+      style: { height: "51px" },
       data: {
         v1: [
           { value: "金属边框", style: { fontSize: "14px" } },
@@ -453,7 +467,7 @@ const DefaultData2 = (): PosterItem => ({
     {
       label: "机身重量 (克)",
       icon: getIcon("1-6"),
-
+      style: { height: "51px" },
       renderTypeAsKey: [],
       data: {
         v1: { value: "170" },
@@ -465,7 +479,7 @@ const DefaultData2 = (): PosterItem => ({
     {
       label: "屏幕外观",
       icon: getIcon("1-7"),
-
+      style: { height: "80px" },
       renderTypeAsKey: [],
       data: {
         v1: { value: "中置药丸屏" },
@@ -477,7 +491,7 @@ const DefaultData2 = (): PosterItem => ({
     {
       label: "配色",
       icon: getIcon("1-8"),
-
+      style: { height: "70px" },
       type: "group-text",
       props: { direction: "normal" },
       renderTypeAsKey: [],
@@ -513,68 +527,68 @@ const DefaultData2 = (): PosterItem => ({
     {
       label: "机型特色",
       icon: getIcon("1-9"),
-
+      style: { height: "150px" },
       type: "group-text",
       props: { direction: "normal", separate: true },
       renderTypeAsKey: [],
       data: {
         v1: [
-          { value: "iOS 18" },
-          { value: "人脸识别" },
-          { value: "X轴线性马达" },
-          { value: "IP68" },
-          { value: "灵动岛" },
-          { value: "HDR显示" },
-          { value: "NFC" },
-          { value: "Apple 智能" },
-          { value: "USB 2" },
-          { value: "MsgSafe" },
-          { value: "Type-C" },
-          { value: "单频卫星" },
+          { value: "iOS 18", style: { fontSize: "10px"} },
+          { value: "人脸识别", style: { fontSize: "10px"}  },
+          { value: "X轴线性马达", style: { fontSize: "10px"}  },
+          { value: "IP68", style: { fontSize: "10px"}  },
+          { value: "灵动岛", style: { fontSize: "10px"}  },
+          { value: "HDR显示", style: { fontSize: "10px"}  },
+          { value: "NFC", style: { fontSize: "10px"}  },
+          { value: "Apple 智能", style: { fontSize: "10px"}  },
+          { value: "USB 2", style: { fontSize: "10px"}  },
+          { value: "MsgSafe", style: { fontSize: "10px"}  },
+          { value: "Type-C", style: { fontSize: "10px"}  },
+          { value: "单频卫星", style: { fontSize: "10px"}  },
         ],
         v2: [
-          { value: "iOS 18" },
-          { value: "人脸识别" },
-          { value: "X轴线性马达" },
-          { value: "IP68" },
-          { value: "灵动岛" },
-          { value: "HDR显示" },
-          { value: "NFC" },
-          { value: "Apple 智能" },
-          { value: "USB 2" },
-          { value: "MsgSafe" },
-          { value: "Type-C" },
-          { value: "单频卫星" },
+          { value: "iOS 18", style: { fontSize: "10px"}  },
+          { value: "人脸识别", style: { fontSize: "10px"}  },
+          { value: "X轴线性马达", style: { fontSize: "10px"}  },
+          { value: "IP68" , style: { fontSize: "10px"} },
+          { value: "灵动岛", style: { fontSize: "10px"}  },
+          { value: "HDR显示", style: { fontSize: "10px"}  },
+          { value: "NFC", style: { fontSize: "10px"}  },
+          { value: "Apple 智能", style: { fontSize: "10px"}  },
+          { value: "USB 2", style: { fontSize: "10px"}  },
+          { value: "MsgSafe", style: { fontSize: "10px"}  },
+          { value: "Type-C", style: { fontSize: "10px"}  },
+          { value: "单频卫星", style: { fontSize: "10px"}  },
         ],
         v3: [
-          { value: "iOS 18" },
-          { value: "相机控制按键", style: { color: "#43CF7C" } },
-          { value: "人脸识别" },
-          { value: "X轴线性马达" },
-          { value: "IP68" },
-          { value: "灵动岛" },
-          { value: "HDR显示" },
-          { value: "NFC" },
-          { value: "Apple 智能" },
-          { value: "USB 3", style: { color: "#43CF7C" } },
-          { value: "MsgSafe" },
-          { value: "Type-C" },
-          { value: "双频卫星", style: { color: "#43CF7C" } },
+          { value: "iOS 18", style: { fontSize: "10px"}  },
+          { value: "相机控制按键", style: { color: "#43CF7C", fontSize: "10px" } },
+          { value: "人脸识别", style: { fontSize: "10px"}  },
+          { value: "X轴线性马达", style: { fontSize: "10px"}  },
+          { value: "IP68", style: { fontSize: "10px"}  },
+          { value: "灵动岛", style: { fontSize: "10px"}  },
+          { value: "HDR显示", style: { fontSize: "10px"}  },
+          { value: "NFC", style: { fontSize: "10px"}  },
+          { value: "Apple 智能", style: { fontSize: "10px"}  },
+          { value: "USB 3", style: { color: "#43CF7C", fontSize: "10px" } },
+          { value: "MsgSafe", style: { fontSize: "10px"}  },
+          { value: "Type-C", style: { fontSize: "10px"}  },
+          { value: "双频卫星", style: { color: "#43CF7C", fontSize: "10px" } },
         ],
         v4: [
-          { value: "iOS 18" },
-          { value: "相机控制按键", style: { color: "#43CF7C" } },
-          { value: "人脸识别" },
-          { value: "X轴线性马达" },
-          { value: "IP68" },
-          { value: "灵动岛" },
-          { value: "HDR显示" },
-          { value: "NFC" },
-          { value: "Apple 智能" },
-          { value: "USB 3", style: { color: "#43CF7C" } },
-          { value: "MsgSafe" },
-          { value: "Type-C" },
-          { value: "双频卫星", style: { color: "#43CF7C" } },
+          { value: "iOS 18", style: { fontSize: "10px"}  },
+          { value: "相机控制按键", style: { color: "#43CF7C",fontSize: "10px" } },
+          { value: "人脸识别", style: { fontSize: "10px"}  },
+          { value: "X轴线性马达", style: { fontSize: "10px"}  },
+          { value: "IP68", style: { fontSize: "10px"}  },
+          { value: "灵动岛", style: { fontSize: "10px"}  },
+          { value: "HDR显示", style: { fontSize: "10px"}  },
+          { value: "NFC", style: { fontSize: "10px"}  },
+          { value: "Apple 智能", style: { fontSize: "10px"}  },
+          { value: "USB 3", style: { color: "#43CF7C", fontSize: "10px" } },
+          { value: "MsgSafe", style: { fontSize: "10px"}  },
+          { value: "Type-C", style: { fontSize: "10px"}  },
+          { value: "双频卫星", style: { color: "#43CF7C",fontSize: "10px" } },
         ],
       },
     },
@@ -584,6 +598,7 @@ const DefaultData2 = (): PosterItem => ({
       icon: getIcon("1-10"),
       props: { direction: "vertical", card: true, cardBgColor: "#fff" },
       renderTypeAsKey: [],
+      style: { height: "232px" },
       data: {
         v1: [
           { value: "<p style='color: #FF7A7A;font-size: 16px'>5999元</p><p style='font-size: 10px;'>8G+128G</p>", style: { fontSize: "16px" }, isHtml: true },

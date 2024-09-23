@@ -26,7 +26,7 @@ export function useTableLayout(
     unref(rows).splice(idx, 0, {
       label,
       type,
-      style: {},
+      style: { height: "51px" },
       renderTypeAsKey: [],
       data,
       props,

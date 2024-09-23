@@ -23,7 +23,7 @@
               <div
                 ref="cellRef"
                 :class="[
-                  'cell h-full w-full flex justify-center items-center px-4 py-3 absolute top-0 right-0 bottom-0 left-0 z-10 can-edit',
+                  'cell h-full w-full flex justify-center items-center py-2.5 px-2 absolute top-0 right-0 bottom-0 left-0 z-10 can-edit',
                   {
                     'cell-header': colIdx === 0,
                   },
@@ -136,13 +136,14 @@ const getCellStyle = (row: TableProps<T>["rows"][number], colIdx: number) => {
 .cell {
   position: relative;
   border: none;
+  align-items: center;
 
   &.cell-header {
-    @apply text-xs justify-start;
+    @apply text-xs px-6 justify-start;
   }
 
   &:not(.cell-header) {
-    @apply text-sm font-bold text-black p-3 flex-shrink-0;
+    @apply text-sm font-bold text-black flex-shrink-0;
   }
 }
 </style>

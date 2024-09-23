@@ -20,11 +20,11 @@ export const textConfig: LayoutConfig[] = [
     type: "rowStyle",
     children: [
       {
-        label: "行高",
+        label: "高度",
         field: "height",
         type: "size",
         defaultValue: "51px",
-        cellHeaderDefaultValue: "51px"
+        cellHeaderDefaultValue: "51px",
       },
     ],
   },
@@ -73,6 +73,19 @@ export const textConfig: LayoutConfig[] = [
 
 export const groupConfig: LayoutConfig[] = [
   {
+    label: "行样式",
+    type: "rowStyle",
+    children: [
+      {
+        label: "高度",
+        field: "height",
+        type: "size",
+        defaultValue: "51px",
+        cellHeaderDefaultValue: "51px",
+      },
+    ],
+  },
+  {
     label: "行配置",
     type: "row",
     children: [
@@ -99,15 +112,41 @@ export const groupConfig: LayoutConfig[] = [
 
 export const imgConfig: LayoutConfig[] = [
   {
+    label: "行样式",
+    type: "rowStyle",
+    children: [
+      {
+        label: "高度",
+        field: "height",
+        type: "size",
+        defaultValue: "51px",
+        cellHeaderDefaultValue: "51px",
+      },
+    ],
+  },
+  {
     label: "",
     type: "content",
     children: [
       { label: "内容", field: "content", type: "image", defaultValue: "" },
     ],
   },
-]
+];
 
 export const groupTextConfig: LayoutConfig[] = [
+  {
+    label: "行样式",
+    type: "rowStyle",
+    children: [
+      {
+        label: "高度",
+        field: "height",
+        type: "size",
+        defaultValue: "51px",
+        cellHeaderDefaultValue: "51px",
+      },
+    ],
+  },
   {
     label: "单元格样式",
     type: "style",

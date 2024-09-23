@@ -23,14 +23,14 @@
           <template v-for="(layItem, idx) in layout" :key="idx">
             <template v-if="!!layItem.children.length">
               <h3 class="mb-4">{{ layItem.label }}</h3>
-              <el-form-item>
+              <!-- <el-form-item>
                 <component
                   v-if="dataInfo.col && dataInfo.col.dataIndex === 'title'"
                   :is="components['image']"
                   :data="form"
                   valueKey="icon"
                 />
-              </el-form-item>
+              </el-form-item> -->
               <el-form-item
                 v-for="(item, idx) in layItem.children"
                 :key="idx"

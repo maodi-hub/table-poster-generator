@@ -92,11 +92,11 @@
       </el-form-item>
       <el-form-item label="平台图标">
         <div class="flex-1">
-          <el-form-item>
+          <el-form-item class="!mb-4">
             <Image class="bg-gray-50" :data="form.platIcon" value-key="value" />
           </el-form-item>
           <el-form-item>
-            <el-select v-model="form.platIcon.value" placeholder="请选择">
+            <el-select v-model="form.platIcon.value" placeholder="请选择" @change="onPlatChange">
               <el-option
                 v-for="item in platFormIcons"
                 :key="item.value"
@@ -163,15 +163,25 @@ const [rows] = inject(ROWS_KEY, [computed(() => []), () => {}, () => {}]);
 const [columns] = inject(COLUMNS_KEY, [computed(() => []), () => {}, () => {}]);
 const $poster = usePosterStore();
 
-const getIcon = (uri: string, prefix: string = "logo") =>
-  new URL(`../assets/${prefix}/${uri}.png`, import.meta.url).href;
+const getIcon = (uri: string, prefix: string = "logo", extention = "png") =>
+  new URL(`../assets/${prefix}/${uri}.${extention}`, import.meta.url).href;
 const platFormIcons = [
-  { value: getIcon("weixin"), label: "微信" },
-  { value: getIcon("tiao"), label: "头条" },
-  { value: getIcon("redbook"), label: "小红书" },
-  { value: getIcon("bili"), label: "阿b" },
-  { value: getIcon("cool"), label: "酷安" },
+  { value: getIcon("weixin"), label: "微信", color: "#49CC56",copyright: "@极客果核" },
+  { value: getIcon("tiao"), label: "头条", color: "#fff",copyright: "@果核剥壳" },
+  { value: getIcon("redbook", "logo", "svg"), label: "小红书", color: "#FF0000",copyright: "@果核的日常" },
+  { value: getIcon("bili"), label: "阿b", color: "#00ACE5",copyright: "@果核剥壳" },
+  { value: getIcon("cool"), label: "酷安",color: "#0EAD66", copyright: "@Applek" },
 ];
+
+const onPlatChange = (value: string) => {
+  if (!value) return;
+  const currentPlat = platFormIcons.find(item => item.value === value);
+  if (!currentPlat) return;
+  
+  form.copyright = currentPlat.copyright;
+  form.platIcon.value = value;
+  form.platIcon.style.backgroundColor = currentPlat.color;
+}
 
 const layoutType = ref(0);
 
@@ -253,6 +263,8 @@ const hydrateForm = (reverse: boolean = false) => {
   $poster.currentPostInfo!.tips = form.tips;
   $poster.currentPostInfo!.platIcon = { ...form.platIcon };
   $poster.currentPostInfo!.copyright = form.copyright;
+  $poster.currentPostInfo!.height = form.width / 0.75 
+  
 };
 
 watch(
