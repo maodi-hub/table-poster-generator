@@ -63,7 +63,7 @@
             <component
               v-if="dataInfo.col && dataInfo.col.dataIndex === 'title'"
               :is="components['image']"
-              class="bg-gray-100 rounded-lg overflow-hidden" 
+              class="bg-gray-100 rounded-lg overflow-hidden"
               :data="form"
               valueKey="icon"
             />

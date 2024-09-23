@@ -76,30 +76,6 @@ const getPoster = (rate: number) => {
     a.download = "海报.png";
     a.click();
   });
-
-  // toImage(document.querySelector("#container") as HTMLElement).then(
-  //   ([_, ctx]) => {
-  //     const canvas = document.createElement("canvas");
-
-  //     const ctx2 = canvas.getContext("2d");
-  //     if (!ctx2) return;
-  //     ctx2.imageSmoothingEnabled = false;
-  //     canvas.width = 810 * rate ;
-  //     canvas.height = 1080 * rate;
-  //     ctx2.drawImage(ctx, 0, 0, canvas.width, canvas.height);
-  //     ctx2.scale(rate, rate);
-  //     canvas.toBlob((blob) => {
-  //       // 文件下载
-  //       const a = document.createElement("a");
-  //       const url = URL.createObjectURL(blob!);
-  //       a.href = url;
-  //       a.download = "海报.png";
-  //       a.click();
-  //       a.remove();
-  //       URL.revokeObjectURL(url);
-  //     });
-  //   }
-  // );
 };
 
 const handleOpen = () => {
